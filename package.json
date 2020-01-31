@@ -1,0 +1,27 @@
+{
+	"name": "@cpecific/ip-utils",
+	"version": "1.0.0",
+	"description": "",
+	"main": "build/index.js",
+	"types": "build/index.d.ts",
+	"scripts": {
+		"build": "tsc",
+		"prepare": "npm run build",
+		"test": "mocha -r ts-node/register tests/**/*.test.ts"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Cpecific/ip-utils.git"
+	},
+	"author": "cpecific",
+	"license": "ISC",
+	"homepage": "https://github.com/Cpecific/ip-utils",
+	"devDependencies": {
+		"@types/chai": "^4.2.8",
+		"@types/mocha": "^7.0.1",
+		"chai": "^4.2.0",
+		"mocha": "^7.0.1",
+		"ts-node": "^8.6.2",
+		"typescript": "^3.7.5"
+	}
+}

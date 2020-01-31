@@ -1,0 +1,22 @@
+{
+	"compilerOptions": {
+		"target": "es5",
+		"module": "commonjs",
+		"lib": [
+			"es2017",
+			// "dom"
+		],
+		"declaration": true,
+		"outDir": "./build",
+		"downlevelIteration": true,
+		"strict": true,
+		"esModuleInterop": true,
+	},
+	"include": [
+		"src"
+	],
+	"exclude": [
+		"node_modules",
+		// "**/__tests__/*"
+	]
+}

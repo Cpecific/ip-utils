@@ -1,0 +1,15 @@
+{
+	"compilerOptions": {
+		// "target": "es5",
+		// "module": "commonjs",
+		"lib": [
+			"es2017",
+		],
+		"downlevelIteration": true,
+		"strict": true,
+		"esModuleInterop": true,
+	},
+	"include": [
+		"**/*.test.ts"
+	]
+}
