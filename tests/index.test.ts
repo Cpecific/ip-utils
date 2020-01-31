@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import * as IPutils from '../src/index';
+import * as IPutils from '../lib/index';
 
 const Data = {
 	IPv4: {
