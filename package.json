@@ -1,14 +1,17 @@
 {
 	"name": "@cpecific/ip-utils",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"description": "",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"scripts": {
 		"build": "tsc",
-		"prepare": "npm run build",
+		"prepublishOnly": "npm run build",
 		"test": "mocha -r ts-node/register tests/**/*.test.ts"
 	},
+	"files": [
+		"lib/**/*"
+	],
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/Cpecific/ip-utils.git"

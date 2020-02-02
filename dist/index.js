@@ -1,15 +1,4 @@
 "use strict";
-var __values = (this && this.__values) || function(o) {
-    var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
-    if (m) return m.call(o);
-    if (o && typeof o.length === "number") return {
-        next: function () {
-            if (o && i >= o.length) o = void 0;
-            return { value: o && o[i++], done: !o };
-        }
-    };
-    throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
-};
 var __read = (this && this.__read) || function (o, n) {
     var m = typeof Symbol === "function" && o[Symbol.iterator];
     if (!m) return o;
@@ -60,26 +49,16 @@ function autoConstructor(bytes) {
 }
 exports.autoConstructor = autoConstructor;
 function subnetMatch(addr, rangeList, defaultName) {
-    var e_1, _a;
     var kind = addr.kind();
     for (var rangeName in rangeList) {
         var rangeSubnets = rangeList[rangeName];
-        try {
-            for (var rangeSubnets_1 = (e_1 = void 0, __values(rangeSubnets)), rangeSubnets_1_1 = rangeSubnets_1.next(); !rangeSubnets_1_1.done; rangeSubnets_1_1 = rangeSubnets_1.next()) {
-                var subnet_1 = rangeSubnets_1_1.value;
-                if (kind === subnet_1.addr.kind()) {
-                    if (subnet_1.contains(addr)) {
-                        return rangeName;
-                    }
+        for (var i = rangeSubnets.length - 1; i >= 0; --i) {
+            var subnet_1 = rangeSubnets[i];
+            if (kind === subnet_1.addr.kind()) {
+                if (subnet_1.contains(addr)) {
+                    return rangeName;
                 }
             }
-        }
-        catch (e_1_1) { e_1 = { error: e_1_1 }; }
-        finally {
-            try {
-                if (rangeSubnets_1_1 && !rangeSubnets_1_1.done && (_a = rangeSubnets_1.return)) _a.call(rangeSubnets_1);
-            }
-            finally { if (e_1) throw e_1.error; }
         }
     }
     return typeof defaultName === 'undefined' ?
@@ -120,36 +99,26 @@ var bitTable = {
 * prefixLengthFromSubnetMask
 */
 function fromSubnetMask(bytes) {
-    var e_2, _a;
     var cidr = 0;
     var stop = false;
-    try {
-        for (var bytes_1 = __values(bytes), bytes_1_1 = bytes_1.next(); !bytes_1_1.done; bytes_1_1 = bytes_1.next()) {
-            var byte = bytes_1_1.value;
-            if (!(byte in bitTable)) {
-                // invalid subnet ip
+    for (var i = 0, len = bytes.length; i < len; ++i) {
+        var byte = bytes[i];
+        if (!(byte in bitTable)) {
+            // invalid subnet ip
+            return null;
+        }
+        var bits = bitTable[byte];
+        if (stop) {
+            if (bits !== 0) {
+                // invalid subnet ip (в предыдущих байтах был !== 0xFF, т.е. текущий все последующие должны быть === 0)
                 return null;
             }
-            var bits = bitTable[byte];
-            if (stop) {
-                if (bits !== 0) {
-                    // invalid subnet ip (в предыдущих байтах был !== 0xFF, т.е. текущий все последующие должны быть === 0)
-                    return null;
-                }
-            }
-            else if (bits !== 8) {
-                // все последующие байты должны быть === 0
-                stop = true;
-            }
-            cidr += bits;
         }
-    }
-    catch (e_2_1) { e_2 = { error: e_2_1 }; }
-    finally {
-        try {
-            if (bytes_1_1 && !bytes_1_1.done && (_a = bytes_1.return)) _a.call(bytes_1);
+        else if (bits !== 8) {
+            // все последующие байты должны быть === 0
+            stop = true;
         }
-        finally { if (e_2) throw e_2.error; }
+        cidr += bits;
     }
     return cidr;
 }
@@ -276,29 +245,18 @@ var ipv4Regexes = {
 };
 var IPv4 = /** @class */ (function () {
     function IPv4(bytes) {
-        var e_3, _a;
         if (bytes.length !== 4) {
             throw new Error('ipaddr: ipv4 octet count should be 4');
         }
-        try {
-            for (var bytes_2 = __values(bytes), bytes_2_1 = bytes_2.next(); !bytes_2_1.done; bytes_2_1 = bytes_2.next()) {
-                var byte = bytes_2_1.value;
-                if (!(0 <= byte && byte <= 255)) {
-                    throw new Error('ipaddr: ipv4 octet should fit in 8 bits');
-                }
+        for (var i = 0; i < bytes.length; ++i) {
+            var byte = bytes[i];
+            if (!(0 <= byte && byte <= 255)) {
+                throw new Error('ipaddr: ipv4 octet should fit in 8 bits');
             }
-        }
-        catch (e_3_1) { e_3 = { error: e_3_1 }; }
-        finally {
-            try {
-                if (bytes_2_1 && !bytes_2_1.done && (_a = bytes_2.return)) _a.call(bytes_2);
-            }
-            finally { if (e_3) throw e_3.error; }
         }
         this.bytes = bytes;
     }
     IPv4.parser = function (string) {
-        var e_4, _a;
         function parseIntAuto(part) {
             if (part.substr(0, 1) === '0'
                 && part.substr(1, 1).toLowerCase() !== 'x') {
@@ -312,18 +270,9 @@ var IPv4 = /** @class */ (function () {
         if (match) {
             var ref = match.slice(1, 6);
             var parts = Array();
-            try {
-                for (var ref_1 = __values(ref), ref_1_1 = ref_1.next(); !ref_1_1.done; ref_1_1 = ref_1.next()) {
-                    var part = ref_1_1.value;
-                    parts.push(parseIntAuto(part));
-                }
-            }
-            catch (e_4_1) { e_4 = { error: e_4_1 }; }
-            finally {
-                try {
-                    if (ref_1_1 && !ref_1_1.done && (_a = ref_1.return)) _a.call(ref_1);
-                }
-                finally { if (e_4) throw e_4.error; }
+            for (var i = 0; i < ref.length; ++i) {
+                var part = ref[i];
+                parts.push(parseIntAuto(part));
             }
             return parts;
         }
@@ -446,7 +395,6 @@ var ipv6Regexes = {
 };
 var IPv6 = /** @class */ (function () {
     function IPv6(parts, zoneId) {
-        var e_5, _a, e_6, _b;
         if (parts.length === 16) {
             this.bytes = parts;
             // this.parts = Array<number>(8) as IPv6Parts;
@@ -456,19 +404,10 @@ var IPv6 = /** @class */ (function () {
         }
         else if (parts.length === 8) {
             var bytes = Array();
-            try {
-                for (var parts_1 = __values(parts), parts_1_1 = parts_1.next(); !parts_1_1.done; parts_1_1 = parts_1.next()) {
-                    var part = parts_1_1.value;
-                    bytes.push(part >> 8);
-                    bytes.push(part & 0xFF);
-                }
-            }
-            catch (e_5_1) { e_5 = { error: e_5_1 }; }
-            finally {
-                try {
-                    if (parts_1_1 && !parts_1_1.done && (_a = parts_1.return)) _a.call(parts_1);
-                }
-                finally { if (e_5) throw e_5.error; }
+            for (var i = 0; i < parts.length; ++i) {
+                var part = parts[i];
+                bytes.push(part >> 8);
+                bytes.push(part & 0xFF);
             }
             this.bytes = bytes;
             // this.parts = parts as IPv6Parts;
@@ -476,20 +415,11 @@ var IPv6 = /** @class */ (function () {
         else {
             throw new Error('ipaddr: ipv6 part count should be 8 or 16');
         }
-        try {
-            for (var _c = __values(this.bytes), _d = _c.next(); !_d.done; _d = _c.next()) {
-                var byte = _d.value;
-                if (!(0 <= byte && byte <= 0xFF)) {
-                    throw new Error('ipaddr: ipv6 byte should fit in 8 bits');
-                }
+        for (var i = 0; i < this.bytes.length; ++i) {
+            var byte = this.bytes[i];
+            if (!(0 <= byte && byte <= 0xFF)) {
+                throw new Error('ipaddr: ipv6 byte should fit in 8 bits');
             }
-        }
-        catch (e_6_1) { e_6 = { error: e_6_1 }; }
-        finally {
-            try {
-                if (_d && !_d.done && (_b = _c.return)) _b.call(_c);
-            }
-            finally { if (e_6) throw e_6.error; }
         }
         this.zoneId = zoneId;
     }
@@ -659,39 +589,21 @@ var IPv6 = /** @class */ (function () {
         return this.bytes.slice();
     };
     IPv6.prototype.toNormalizedString = function () {
-        var e_7, _a;
         var results = [];
-        try {
-            for (var _b = __values(this.getParts()), _c = _b.next(); !_c.done; _c = _b.next()) {
-                var part = _c.value;
-                results.push(part.toString(16));
-            }
-        }
-        catch (e_7_1) { e_7 = { error: e_7_1 }; }
-        finally {
-            try {
-                if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
-            }
-            finally { if (e_7) throw e_7.error; }
+        var parts = this.getParts();
+        for (var i = 0; i < parts.length; ++i) {
+            var part = parts[i];
+            results.push(part.toString(16));
         }
         var addr = results.join(':');
         return "" + addr + (this.zoneId ? "%" + this.zoneId : "");
     };
     IPv6.prototype.toFixedLengthString = function () {
-        var e_8, _a;
         var results = [];
-        try {
-            for (var _b = __values(this.getParts()), _c = _b.next(); !_c.done; _c = _b.next()) {
-                var part = _c.value;
-                results.push(part.toString(16).padStart(4, '0'));
-            }
-        }
-        catch (e_8_1) { e_8 = { error: e_8_1 }; }
-        finally {
-            try {
-                if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
-            }
-            finally { if (e_8) throw e_8.error; }
+        var parts = this.getParts();
+        for (var i = 0; i < parts.length; ++i) {
+            var part = parts[i];
+            results.push(part.toString(16).padStart(4, '0'));
         }
         var addr = results.join(':');
         return "" + addr + (this.zoneId ? "%" + this.zoneId : "");
