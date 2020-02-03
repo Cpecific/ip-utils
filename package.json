@@ -1,6 +1,6 @@
 {
 	"name": "@cpecific/ip-utils",
-	"version": "1.0.3",
+	"version": "1.0.4",
 	"description": "",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
@@ -10,7 +10,7 @@
 		"test": "mocha -r ts-node/register tests/**/*.test.ts"
 	},
 	"files": [
-		"lib/**/*"
+		"dist/**/*"
 	],
 	"repository": {
 		"type": "git",
