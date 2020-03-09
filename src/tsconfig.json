@@ -1,0 +1,15 @@
+{
+	"compilerOptions": {
+		"target": "ES5",
+		"module": "CommonJS",
+		"moduleResolution": "Node",
+		"lib": [
+			"ES5"
+		],
+		"skipLibCheck": true,
+		"strict": true,
+	},
+	"include": [
+		"./**/*.ts"
+	]
+}
